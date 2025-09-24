@@ -1,7 +1,7 @@
 import json
 import hashlib
 
-ARCHIVO_USUARIOS="usuarios.json"
+ARCHIVO_USUARIOS="../json/usuarios.json"
 
 class Usuario:
     def __init__(self, username, password_hash, rol="cliente"):
