@@ -1,0 +1,4 @@
+id,nombre,precio,talla,cantidad,categoria
+1,Camiseta,19.99,M,10,Ropa
+2,Pantalón,39.5,L,12,Ropa
+3,Zapatos,59.9,42,0,Calzado
