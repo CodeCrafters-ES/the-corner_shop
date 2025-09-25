@@ -1,9 +1,13 @@
 import sqlite3
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "tienda.db" #archivo SQLite
-SCHEMA_PATH = BASE_DIR /  "tienda.sql" #Esquema
+APP_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = APP_DIR.parent
+
+DB_PATH = PROJECT_ROOT / "data" / "tienda.db"
+SCHEMA_PATH = PROJECT_ROOT / "schema" / "tienda.sql"
+
+DB_PATH.parent.mkdir(parents=True, exist_ok=True) 
 
 #Conectar
 conn = sqlite3.connect(DB_PATH)
