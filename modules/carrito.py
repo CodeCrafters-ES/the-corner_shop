@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from database.db import get_conn, execute, fetch_one, fetch_all
 
 # Programadora 3 Noemí
 # Módulo de Carrito de Compras:
