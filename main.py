@@ -5,7 +5,10 @@ if __name__ == "__main__":
     # 1) Asegura el esquema (una vez al arrancar) Debe ir al inicio del Main.py
     init_db()
 
-    # 2) Elige el usuario (por nombre) y consigue su id
+
+
+    #ejemplo de ejecución de módulo de pago y generar factura
+    # Elige el usuario (por nombre) y consigue su id
     nombre = input("Nombre del cliente:")
     row = fetch_one("SELECT id FROM usuarios WHERE nombre = ?", (nombre,))
     if not row:
@@ -14,7 +17,7 @@ if __name__ == "__main__":
 
     user_id = row["id"]
 
-    # 3) Ejecuta el pago y muestra el resultado
+    # Ejecuta el pago y muestra el resultado, luego pide al usuario si generar factura
     try:
         resultado_pago = procesar_pago(user_id)
         print("\n=== RESULTADO DEL PAGO ===")
