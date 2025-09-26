@@ -1,4 +1,4 @@
-from db import init_db, fetch_one
+from database.db import init_db, fetch_one
 from modules.pagos import procesar_pago, generar_factura
 
 if __name__ == "__main__":
