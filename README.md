@@ -24,24 +24,70 @@
 
 ```bash
 the-corner-shop/ 
-├── app/ 
-│ ├── models/ 
-│ │ ├── product.py 
-│ │ ├── user.py 
-│ │ └── order.py 
-│ ├── controllers/ 
-│ │ ├── auth_controller.py 
-│ │ ├── product_controller.py 
-│ │ └── order_controller.py 
-│ ├── views/ 
-│ │ └── templates/ 
-│ ├── static/ 
-│ │ └── css/ 
-│ └── main.py 
-├── database/ 
-│ └── corner_shop.db 
-├── requirements.txt 
-└── README.md
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── main.py
+│
+├── models/ 
+│   ├── __init__.py
+│   ├── product.py 
+│   ├── user.py 
+│   └── order.py 
+│
+├── repositories/
+│   ├── __init__.py
+│   ├── base_repository.py
+│   ├── producto_repository.py
+│   ├── usuario_repository.py
+│   └── carrito_repository.py
+│
+├── services/
+│   ├── __init__.py
+│   ├── producto_service.py
+│   ├── usuario_service.py
+│   └── carrito_service.py
+│
+├── controllers/
+│   ├── __init__.py
+│   ├── producto_controller.py
+│   ├── usuario_controller.py
+│   └── carrito_controller.py
+│
+├── database/
+│   ├── __init__.py
+│   ├── database.py
+│   ├── migrations/
+│   │   ├── 001_initial_schema.sql
+│   │   └── 002_add_categories.sql
+│   └── seeds/
+│       ├── productos_ejemplo.json
+│       └── usuarios_ejemplo.json
+│
+├── data/
+│   ├── exports/
+│   │   ├── csv/
+│   │   └── json/
+│   └── backups/
+│
+└── tests/
+    ├── __init__.py
+    ├── conftest.py
+    ├── test_models/
+    │   ├── __init__.py
+    │   ├── test_producto.py
+    │   ├── test_usuario.py
+    │   └── test_carrito.py
+    ├── test_repositories/
+    │   ├── __init__.py
+    │   ├── test_producto_repository.py
+    │   ├── test_usuario_repository.py
+    │   └── test_carrito_repository.py
+    └── test_services/
+        ├── __init__.py
+        ├── test_producto_service.py
+        ├── test_usuario_service.py
+        └── test_carrito_service.py
 ```
 
 ## ⚙️ Instalación
