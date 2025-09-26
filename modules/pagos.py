@@ -1,4 +1,4 @@
-from db import get_conn, execute, fetch_one, fetch_all
+from database.db import get_conn, execute, fetch_one, fetch_all
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
