@@ -1,16 +1,16 @@
 import json
 import hashlib
-from db import get_conn, execute
+from sqlite3 import IntegrityError
+from database.db import get_conn, execute, fetch_one
 from pathlib import Path
 
-# ARCHIVO_USUARIOS="../data/usuarios.json"
- 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent  # sube de /modules a la raíz
+#Esteve
 
+# ARCHIVO_USUARIOS="../data/usuarios.json"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent  # sube de /modules a la raíz
 file_path = PROJECT_ROOT / "data" / "exports" / "json" / "usuarios.json"
- 
 file_path.parent.mkdir(parents=True, exist_ok=True)  # SI NO EXISTE, crea carpetas
- 
+
 
 class Usuario:
     def __init__(self, username, password_hash, rol="cliente"):
@@ -32,14 +32,37 @@ class Usuario:
         self.__password_hash=new_password_hash
     def set_rol(self, new_rol):
         self.__rol=new_rol
-    # REGISTRO DE USUARIOS PARA EL SQLITE
+    
+    #Método estático para hashear la password
+    @staticmethod
+    def _hash(pwd: str) -> str:
+        return hashlib.sha256(pwd.encode("utf-8")).hexdigest()
+    
+    # REGISTRO DE USUARIOS PARA EL SQLITE con validación de usuario si hay duplicado
     @classmethod
-    def create(cls, nombre: str, password: str, rol: str = "cliente") -> "Usuario":
-                new_id = execute(
+    def create(cls, nombre: str, password: str, rol: str = "cliente") -> tuple[bool, str]:
+        try:
+            execute(
                     "INSERT INTO usuarios(nombre, password, rol) VALUES (?,?,?)",
-                    (nombre, password, rol)
+                    (nombre, cls._hash(password), rol.lower())
                 )
-                # return cls(new_id, nombre, password, rol)
+            return True, f"Usuario '{nombre}' creado con éxito. ¡Ya puedes iniciar sesión!"
+        except IntegrityError:
+            return False, f"El usuario '{nombre}' ya existe."
+
+    #Iniciar sesión con SQLite
+    @classmethod
+    def login(cls, nombre: str, password: str):
+        row = fetch_one(
+            "SELECT id, nombre, rol FROM USUARIOS WHERE nombre=? AND password=?",
+            (nombre, cls._hash(password))
+        )
+        return row
+    
+    @staticmethod
+    def es_admin_row(row) -> bool:
+        return bool(row) and row["rol"].lower() == "admin"
+    
 
     # REGISTRO DE USUARIOS PARA EL JSON
     def  registrar_usuario(username, password):
@@ -82,7 +105,7 @@ class Usuario:
         return None
         
     # FUNCION VERIFICAR ADMINISTRADOR
-    def es_admin(nombre):
+    def is_admin(nombre):
         try:
             with open(file_path, 'r') as f:
                 usuarios = json.load(f)

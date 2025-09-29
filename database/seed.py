@@ -17,8 +17,8 @@ def seed_usuarios(conn):
         INSERT INTO usuarios (nombre, password, rol)
         VALUES (?,?,?)
         ON CONFLICT(nombre) DO UPDATE SET
-          password = excluded.password,
-          rol      = excluded.rol
+        password = excluded.password,
+        rol      = excluded.rol
         """,
         usuarios,
     )
@@ -36,9 +36,9 @@ def seed_productos(conn):
         INSERT INTO productos (nombre, precio, talla, cantidad)
         VALUES (?,?,?,?)
         ON CONFLICT(nombre) DO UPDATE SET
-          precio   = excluded.precio,
-          talla    = excluded.talla,
-          cantidad = excluded.cantidad
+        precio   = excluded.precio,
+        talla    = excluded.talla,
+        cantidad = excluded.cantidad
         """,
         productos,
     )
@@ -77,8 +77,8 @@ def seed_carritos(conn):
                 INSERT INTO carrito_items (id_carrito, id_producto, cantidad, precio)
                 VALUES (?,?,?,?)
                 ON CONFLICT(id_carrito, id_producto) DO UPDATE SET
-                  cantidad = excluded.cantidad,
-                  precio   = excluded.precio
+                cantidad = excluded.cantidad,
+                precio   = excluded.precio
                 """,
                 (carrito_id, pid, qty, precio),
             )
