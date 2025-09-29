@@ -68,8 +68,7 @@ def procesar_pago(id_usuario: int) -> dict:
         "ticket": f"Nº carrito: {carrito_id}\n" + "\n".join(lineas) + f"\nTOTAL: {total:.2f} €"
         }
         
-      
-      
+
     # # 2) Elige el usuario (por nombre) y consigue su id
     # nombre = "ana"  # o pídeselo por input()
     # row = fetch_one("SELECT id FROM usuarios WHERE nombre = ?", (nombre,))
