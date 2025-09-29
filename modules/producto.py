@@ -128,14 +128,14 @@ class Producto:
         
     # Métodos estáticos para persistencia    
     @staticmethod
-    def guardar_json(productos, archivo = Path("json/productos.json")):
+    def guardar_json(productos, archivo = Path("../data/exports/json/productos.json")):
         archivo = Path(archivo)  # convertir a Path
         archivo.parent.mkdir(parents=True, exist_ok=True)  # crea carpeta si no existe
         with open(archivo, "w", encoding="utf-8") as f:
             json.dump([p.obtener_producto() for p in productos], f, indent=4, ensure_ascii=False)
    
     @staticmethod
-    def guardar_csv(productos, archivo = Path("csv/productos.csv")):
+    def guardar_csv(productos, archivo = Path("../data/exports/csv/productos.csv")):
         archivo = Path(archivo)  # convertir a Path
         archivo.parent.mkdir(parents=True, exist_ok=True)  # crea carpeta si no existe
         with open(archivo, "w", newline="", encoding="utf-8") as f:
@@ -172,8 +172,8 @@ class Producto:
 
 # # Guardar en archivos
 # productos = [p1, p2, p3]
-# Producto.guardar_json(productos, "json/productos.json")
-# Producto.guardar_csv(productos, "csv/productos.csv")
+# Producto.guardar_json(productos)
+# Producto.guardar_csv(productos)
 
 # # Lista de productos
 # Producto.obtener_productos(productos)

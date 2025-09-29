@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = PROJECT_ROOT / "data" / "tienda.db"
 SCHEMA_PATH = PROJECT_ROOT / "database" / "tienda.sql"
 DB_PATH.parent.mkdir(parents=True, exist_ok=True) 
@@ -37,6 +37,7 @@ def execute(sql: str, params: tuple = ()):
 #               ("vestido de flores", 19.99, "M", 20))
 # print("nuevo producto id:", pid)
 
+
 #fetch_one(sql, params=()) → una fila (sqlite3.Row o None)
 def fetch_one(sql: str, params: tuple = ()):
     with get_conn() as conn:
@@ -53,6 +54,11 @@ def fetch_all(sql: str, params: tuple = ()):
 # rows = fetch_all("SELECT id, nombre, precio, talla, cantidad FROM productos ORDER BY id")
 # productos = [dict(r) for r in rows]
 # print(productos)
+# def create(cls, nombre: str, password: str, rol: str = "cliente") -> "Usuario":
+#   new_id = execute(
+#             "INSERT INTO usuarios(nombre, password, rol) VALUES (?,?,?)",
+#              (nombre, password, rol)
+#             )
 
 if __name__ == "__main__":
     init_db()
