@@ -41,6 +41,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 tempCodeRunnerFile*
+[Tt]emp[Cc]ode[Rr]unner[Ff]ile*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

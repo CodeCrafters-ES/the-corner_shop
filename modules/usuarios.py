@@ -40,21 +40,26 @@ class Usuario:
     
     # REGISTRO DE USUARIOS PARA EL SQLITE con validación de usuario si hay duplicado
     @classmethod
-    def create(cls, nombre: str, password: str, rol: str = "cliente") -> tuple[bool, str]:
+    def create(cls, nombre: str, password: str, rol: str = "cliente") -> dict:
         try:
-            execute(
+            new_id = execute(
                     "INSERT INTO usuarios(nombre, password, rol) VALUES (?,?,?)",
                     (nombre, cls._hash(password), rol.lower())
                 )
-            return True, f"Usuario '{nombre}' creado con éxito. ¡Ya puedes iniciar sesión!"
+            return {
+                "ok": True,
+                "id": new_id,
+                "msg": f"Usuario '{nombre}' creado con éxito. ¡Ya puedes iniciar sesión!"                
+            }         
         except IntegrityError:
-            return False, f"El usuario '{nombre}' ya existe."
+            row = fetch_one("SELECT id FROM usuarios WHERE nombre=?", (nombre,))
+            return {"ok": False, "error": f"El usuario '{nombre}' ya existe.", "id": row["id"] if row else None}
 
     #Iniciar sesión con SQLite
     @classmethod
     def login(cls, nombre: str, password: str):
         row = fetch_one(
-            "SELECT id, nombre, rol FROM USUARIOS WHERE nombre=? AND password=?",
+            "SELECT id, nombre, rol FROM usuarios WHERE nombre=? AND password=?",
             (nombre, cls._hash(password))
         )
         return row

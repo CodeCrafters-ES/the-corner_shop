@@ -32,6 +32,8 @@ def menu_cliente(usuario):
                 for p in productos:
                     print(f" - {p}")
             case "2":
+                user_id = usuario["id"] #id para crear carrito
+                print(user_id)
                 nombre = input("🔎 Nombre del producto que deseas añadir: ")
                 cantidad = int(input("📦 ¿Cuántas unidades?: "))
                 agregar_al_carrito(nombre, cantidad)
@@ -98,8 +100,8 @@ def main():
             case "2":
                 username = input("🆕 Elige un nombre de usuario: ").strip().title()
                 password = input("🔐 Elige una contraseña: ").strip()
-                ok, msg = Usuario.create(username, password, "cliente")
-                print("✅ " if ok else "⚠️ ", msg)
+                res = Usuario.create(username, password)
+                print(f"✅ {res["msg"]}" if res["ok"] else f"⚠️ {res["error"]}")
             case "0":
                 print("👋 Gracias por visitar nuestra tienda. ¡Hasta la próxima!")
                 break
