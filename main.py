@@ -1,7 +1,7 @@
 from database.db import init_db, fetch_one
 from modules.pagos import procesar_pago, generar_factura
 from modules.producto import *
-from modules.usuarios import *
+from modules.usuarios import Usuario
 from modules.carrito import *
 from modules.pagos import procesar_pago, generar_factura
 
@@ -9,6 +9,7 @@ init_db()
 
 def menu_admin(usuario):
     while True:
+        break
     
 
 def menu_cliente(usuario):
@@ -18,7 +19,7 @@ def menu_cliente(usuario):
         print("2️⃣ Añadir producto al carrito")
         print("3️⃣ Quitar producto del carrito")
         print("4️⃣ Consultar carrito")
-        print("5️⃣ Realizar pago")
+        print("5️⃣ Realizar pago") #Listo
         print("6️⃣ Vaciar carrito")
         print("0️⃣ Cerrar sesión")
         
@@ -31,6 +32,8 @@ def menu_cliente(usuario):
                 for p in productos:
                     print(f" - {p}")
             case "2":
+                user_id = usuario["id"] #id para crear carrito
+                print(user_id)
                 nombre = input("🔎 Nombre del producto que deseas añadir: ")
                 cantidad = int(input("📦 ¿Cuántas unidades?: "))
                 agregar_al_carrito(nombre, cantidad)
@@ -75,34 +78,35 @@ def main():
     print("👗 Bienvenido a la Tienda de Ropa Online 👠")
     while True:
         print("\n🔐 Menú principal")
-        print("1️⃣ Iniciar sesión")
-        print("2️⃣ Registrarse")
-        print("0️⃣ Salir")
+        print("1️⃣ Iniciar sesión") #Listo
+        print("2️⃣ Registrarse") #Listo
+        print("0️⃣ Salir") #Listo
         
         opcion = input("👉 Elige una opción: ")
         
-        if opcion == "1":
-            username = input("👤 Usuario: ")
-            password = input("🔑 Contraseña: ")
-            usuario = iniciar_sesion(username, password)
-            if usuario:
-                print(f"🙌 ¡Hola {username}! Accediendo a tu perfil...")
-                if es_admin(usuario):
-                    menu_admin(usuario)
+        match (opcion):
+            case "1":
+                username = input("👤 Usuario: ").strip().title()
+                password = input("🔑 Contraseña: ").strip()
+                usuario = Usuario.login(username, password)
+                if usuario:
+                    print(f"🙌 ¡Hola, {username}! Accediendo a tu perfil...")
+                    if Usuario.es_admin_row(usuario):
+                        menu_admin(usuario)
+                    else:
+                        menu_cliente(usuario)
                 else:
-                    menu_cliente(usuario)
-            else:
-                print("❌ Usuario o contraseña incorrectos. Intenta de nuevo.")
-        elif opcion == "2":
-            username = input("🆕 Elige un nombre de usuario: ")
-            password = input("🔐 Elige una contraseña: ")
-            registrar_usuario(username, password)
-            print(f"✅ Usuario '{username}' registrado con éxito. ¡Ya puedes iniciar sesión!")
-        elif opcion == "0":
-            print("👋 Gracias por visitar nuestra tienda. ¡Hasta la próxima!")
-            break
-        else:
-            print("❓ Opción no reconocida. Intenta de nuevo.")
+                    print("❌ Usuario o contraseña incorrectos. Intenta de nuevo.")
+            case "2":
+                username = input("🆕 Elige un nombre de usuario: ").strip().title()
+                password = input("🔐 Elige una contraseña: ").strip()
+                res = Usuario.create(username, password)
+                print(f"✅ {res["msg"]}" if res["ok"] else f"⚠️ {res["error"]}")
+            case "0":
+                print("👋 Gracias por visitar nuestra tienda. ¡Hasta la próxima!")
+                break
+            case _:
+                print("❓ Opción no reconocida. Intenta de nuevo.")
             
             
 if __name__ == "__main__":
