@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 from typing import List, Optional
-from modules.producto import Producto  # Importar tu clase Producto
+from modules.producto import Producto
 
 class ProductoRepository:
     """
@@ -15,8 +15,7 @@ class ProductoRepository:
     def _init_database(self):
         """Inicializa la base de datos con las tablas necesarias"""
         with sqlite3.connect(self.db_path) as conn:
-            conn.execute("PRAGMA foreign_keys=ON")
-            # Las tablas ya están creadas según tu esquema
+            conn.execute("PRAGMA foreign_keys=ON")            
             
     def _get_connection(self) -> sqlite3.Connection:
         """Obtiene una conexión a la base de datos"""
@@ -253,7 +252,7 @@ class ProductoRepository:
 # Ejemplo de uso
 if __name__ == "__main__":
     # Crear instancia del repositorio
-    repo = ProductoRepository("tienda.db")
+    repo = ProductoRepository("tienda.sql")
     
     # Crear un nuevo producto
     try:
