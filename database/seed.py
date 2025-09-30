@@ -7,10 +7,10 @@ def h(p: str) -> str:
 
 def seed_usuarios(conn):
     usuarios = [
-        ("admin",  h("admin"),  "admin"),
-        ("ana",    h("pass123"), "cliente"),
-        ("bruno",  h("pass123"), "cliente"),
-        ("carla",  h("pass123"), "cliente"),
+        ("Admin",  h("admin"),  "admin"),
+        ("Ana",    h("pass123"), "cliente"),
+        ("Bruno",  h("pass123"), "cliente"),
+        ("Carla",  h("pass123"), "cliente"),
     ]
     conn.executemany(
         """

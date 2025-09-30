@@ -2,72 +2,74 @@ from database.db import init_db, fetch_one
 from modules.pagos import procesar_pago, generar_factura
 from modules.producto import *
 from modules.usuarios import Usuario
-from modules.carrito import *
+from modules.carrito import Carrito
 from modules.pagos import procesar_pago, generar_factura
 
 init_db()
 
 def menu_admin(usuario):
+    nombre_admin = usuario["nombre"]
     while True:
-        break
+        print(f"\n🛠️  Menú admin ({nombre_admin})")
+        print("1️⃣  Listar productos")
+        print("2️⃣  Añadir producto (o sumar stock si existe)")
+        print("3️⃣  Actualizar stock (valor exacto)")
+        print("4️⃣  Actualizar precio")
+        print("5️⃣  Eliminar producto")
+        print("0️⃣  Salir")
+
+        op = input("👉 Opción: ").strip()
+
+        match op:
+            case 1:
+                pass
     
 
 def menu_cliente(usuario):
     while True:
         print("\n👕 Bienvenido al menú de cliente")
-        print("1️⃣ Ver catálogo de productos")
-        print("2️⃣ Añadir producto al carrito")
-        print("3️⃣ Quitar producto del carrito")
-        print("4️⃣ Consultar carrito")
+        print("1️⃣ Ver catálogo de productos") #módulo carrito
+        print("2️⃣ Añadir producto al carrito") #módulo carrito
+        print("3️⃣ Quitar producto del carrito") #módulo carrito
+        print("4️⃣ Consultar carrito") #módulo carrito
         print("5️⃣ Realizar pago") #Listo
-        print("6️⃣ Vaciar carrito")
+        print("6️⃣ Vaciar carrito") #módulo carrito
         print("0️⃣ Cerrar sesión")
         
         opcion = input("👉 Elige una opción: ")
         
-        match (opcion):
+        match opcion:
             case "1":
                 print("\n🛍️ Productos disponibles:")
                 productos = obtener_productos()
                 for p in productos:
                     print(f" - {p}")
             case "2":
-                user_id = usuario["id"] #id para crear carrito
-                print(user_id)
-                nombre = input("🔎 Nombre del producto que deseas añadir: ")
-                cantidad = int(input("📦 ¿Cuántas unidades?: "))
-                agregar_al_carrito(nombre, cantidad)
-                print(f"✅ {cantidad} unidad(es) de '{nombre}' añadidas al carrito.")
+                Carrito.agregar_al_carrito(usuario["id"])
             case "3":
-                nombre = input("🗑️ Nombre del producto que deseas quitar: ")
-                eliminar_del_carrito(nombre)
-                print(f"❌ '{nombre}' eliminado del carrito.")
+                Carrito.eliminar_del_carrito(usuario["id"])
             case "4":
-                print("\n🛒 Tu carrito contiene:")
-                ver_carrito()
-                
+                Carrito.ver_carrito(usuario["id"])                
             case "5":
-                nombre = usuario["nombre"]
-                row = fetch_one("SELECT id FROM usuarios WHERE nombre = ?", (nombre,))
-                if not row:
-                    raise SystemExit(1)
-                
-                user_id = row["id"]
-                
+                user_id = usuario["id"]
                 try:
-                    resultado_pago = procesar_pago(user_id)
-                    print("\n=== RESULTADO DEL PAGO ===")
-                    print(resultado_pago["ticket"])
-                    op = input("¿Quiere generar factura? (y/n)").lower().strip()
-                    if op == "y":
-                        print(generar_factura(resultado_pago["carrito_id"], resultado_pago["lineas"], resultado_pago["total"]))
+                    resultado = procesar_pago(user_id)
+                    if not resultado.get("ok"):
+                        print(resultado.get("error", "No se pudo procesar el pago."))
+                    else:
+                        print("\n=== RESULTADO DEL PAGO ===")
+                        print(resultado["ticket"])
+                        op = input("¿Quiere generar factura? (s/n)\n-> ").lower().strip()
+                        if op == "s":
+                            print(generar_factura(
+                                resultado["carrito_id"],
+                                resultado["lineas"],
+                                resultado["total"]
+                            ))
                 except RuntimeError as e:
-                    # p.ej., si el stock cambió entre el chequeo y el descuento
-                    print(f"Error de pago: {e}")
-                    
+                    print(f"Error de pago: {e}")                    
             case "6":
-                vaciar_carrito()
-                print("🧹 Carrito vaciado con éxito.")
+                Carrito.vaciar_carrito(usuario["id"])
             case "0":
                 print("👋 Cerrando sesión. ¡Hasta pronto!")
                 break
@@ -84,7 +86,7 @@ def main():
         
         opcion = input("👉 Elige una opción: ")
         
-        match (opcion):
+        match opcion:
             case "1":
                 username = input("👤 Usuario: ").strip().title()
                 password = input("🔑 Contraseña: ").strip()
