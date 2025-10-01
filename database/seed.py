@@ -37,7 +37,6 @@ def seed_productos(conn):
         """
         INSERT INTO productos (nombre, precio, talla, cantidad)
         VALUES (?,?,?,?)
-        ON CONFLICT(nombre) DO UPDATE SET
         precio   = excluded.precio,
         talla    = excluded.talla,
         cantidad = excluded.cantidad
