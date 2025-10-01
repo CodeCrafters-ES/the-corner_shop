@@ -1,10 +1,12 @@
-from database.db import init_db, fetch_one
+from database.db import init_db
 from modules.pagos import procesar_pago, generar_factura
-from modules.producto import *
+from repositories.producto_repository import ProductoRepository
+from modules.producto import Producto
 from modules.usuarios import Usuario
 from modules.carrito import Carrito
-from modules.pagos import procesar_pago, generar_factura
+from modules.utils.inputs import input_int, input_float
 
+repo_producto = ProductoRepository()
 init_db()
 
 def menu_admin(usuario):
@@ -12,7 +14,7 @@ def menu_admin(usuario):
     while True:
         print(f"\n🛠️  Menú admin ({nombre_admin})")
         print("1️⃣  Listar productos")
-        print("2️⃣  Añadir producto (o sumar stock si existe)")
+        print("2️⃣  Añadir producto")
         print("3️⃣  Actualizar stock (valor exacto)")
         print("4️⃣  Actualizar precio")
         print("5️⃣  Eliminar producto")
@@ -21,10 +23,60 @@ def menu_admin(usuario):
         op = input("👉 Opción: ").strip()
 
         match op:
-            case 1:
-                pass
-    
+            case "1":
+                print("\n🛍️ Productos disponibles:")
+                productos = repo_producto.obtener_todos_productos()
+                if not productos:
+                    print("📦 No hay productos.")
+                for p in productos:
+                    print(f"- [{p.id_producto}] {p.nombre} · talla {p.talla} · {p.cantidad} uds · {p.precio:.2f} €")
+            case "2":
+                nombre = input("Nombre: ").strip().title()
+                talla  = input("Talla: ").strip().upper()
+                precio = input_float("Precio (€): ", minv=0.0)
+                cant   = input_int("Cantidad: ", minv=0)
 
+                prod = Producto(id_producto=0, nombre=nombre, precio=precio, talla=talla, cantidad=cant)
+                nuevo_id = repo_producto.crear_producto(prod)
+                if nuevo_id:
+                    print(f"✅ Creado con id {nuevo_id}")
+                else:
+                    print("⚠️ No se pudo crear (¿nombre duplicado?).")
+            
+            case "3":
+                pid  = input_int("ID de producto: ", minv=1)
+                nuevo = input_int("Nuevo stock: ", minv=0)
+                ok = repo_producto.actualizar_stock(pid, nuevo)
+                print("✅ Stock actualizado." if ok else "⚠️ No se pudo actualizar.")
+                
+            case "4":
+                pid = input_int("ID de producto: ", minv=1)
+                p = repo_producto.obtener_producto_por_id(pid)
+                if not p:
+                    print("❌ No existe ese producto.")
+                else:
+                    nuevo = input_float(f"Precio actual {p.precio:.2f} €. Nuevo precio: ", minv=0.0)
+                    p.precio = nuevo
+                    ok = repo_producto.actualizar_producto(p)
+                    print("✅ Precio actualizado." if ok else "⚠️ No se pudo actualizar.")
+                    
+            case "5":
+                pid = input_int("ID de producto a eliminar: ", minv=1)
+                conf = input("¿Seguro? (s/N): ").strip().lower()
+                if conf == "s":
+                    ok = repo_producto.eliminar_producto(pid)
+                    print("🗑️  Eliminado." if ok else "⚠️ No se pudo eliminar.")
+                else:
+                    print("Cancelado.")
+
+            case "0":
+                print("👋 Saliendo del menú admin.")
+                break
+            
+            case _:
+                print("❓ Opción no reconocida.")
+                
+    
 def menu_cliente(usuario):
     while True:
         print("\n👕 Bienvenido al menú de cliente")
@@ -41,9 +93,11 @@ def menu_cliente(usuario):
         match opcion:
             case "1":
                 print("\n🛍️ Productos disponibles:")
-                productos = obtener_productos()
+                productos = repo_producto.obtener_todos_productos()
+                if not productos:
+                    print("📦 No hay productos.")
                 for p in productos:
-                    print(f" - {p}")
+                    print(f"- [{p.id_producto}] {p.nombre} · talla {p.talla} · {p.cantidad} uds · {p.precio:.2f} €")
             case "2":
                 Carrito.agregar_al_carrito(usuario["id"])
             case "3":
@@ -103,7 +157,7 @@ def main():
                 username = input("🆕 Elige un nombre de usuario: ").strip().title()
                 password = input("🔐 Elige una contraseña: ").strip()
                 res = Usuario.create(username, password)
-                print(f"✅ {res["msg"]}" if res["ok"] else f"⚠️ {res["error"]}")
+                print(f"✅ {res['msg']}" if res["ok"] else f"⚠️ {res['error']}")
             case "0":
                 print("👋 Gracias por visitar nuestra tienda. ¡Hasta la próxima!")
                 break
