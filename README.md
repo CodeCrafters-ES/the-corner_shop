@@ -14,11 +14,8 @@
 
 ## 🧱 Tecnologías utilizadas
 
-- **Python 3.10+**
+- **Python 3.13+**
 - **SQLite3**
-- **HTML/CSS** (para la interfaz)
-- **Flask** (opcional para servir la app)
-- **Jinja2** (si se usa Flask para plantillas)
 
 ## 🗂️ Estructura del proyecto
 
@@ -102,7 +99,7 @@ cd the-corner-shop
 ## Ejecuta la aplicación
 
 ```bash
-python app/main.py
+python main.py
 ```
 
 ## 📄 Licencia
