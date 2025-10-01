@@ -7,18 +7,20 @@ def h(p: str) -> str:
 
 def seed_usuarios(conn):
     usuarios = [
-        ("admin",  h("admin"),  "admin"),
-        ("ana",    h("pass123"), "cliente"),
-        ("bruno",  h("pass123"), "cliente"),
-        ("carla",  h("pass123"), "cliente"),
+
+        ("Admin",  h("admin"),  "admin"),
+        ("Ana",    h("pass123"), "cliente"),
+        ("Bruno",  h("pass123"), "cliente"),
+        ("Carla",  h("pass123"), "cliente"),
     ]
     conn.executemany(
         """
         INSERT INTO usuarios (nombre, password, rol)
         VALUES (?,?,?)
         ON CONFLICT(nombre) DO UPDATE SET
-          password = excluded.password,
-          rol      = excluded.rol
+        password = excluded.password,
+        rol      = excluded.rol
+
         """,
         usuarios,
     )
@@ -35,10 +37,9 @@ def seed_productos(conn):
         """
         INSERT INTO productos (nombre, precio, talla, cantidad)
         VALUES (?,?,?,?)
-        ON CONFLICT(nombre) DO UPDATE SET
-          precio   = excluded.precio,
-          talla    = excluded.talla,
-          cantidad = excluded.cantidad
+        precio   = excluded.precio,
+        talla    = excluded.talla,
+        cantidad = excluded.cantidad
         """,
         productos,
     )
@@ -77,8 +78,8 @@ def seed_carritos(conn):
                 INSERT INTO carrito_items (id_carrito, id_producto, cantidad, precio)
                 VALUES (?,?,?,?)
                 ON CONFLICT(id_carrito, id_producto) DO UPDATE SET
-                  cantidad = excluded.cantidad,
-                  precio   = excluded.precio
+                cantidad = excluded.cantidad,
+                precio   = excluded.precio
                 """,
                 (carrito_id, pid, qty, precio),
             )

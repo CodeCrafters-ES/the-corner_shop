@@ -64,3 +64,4 @@ if __name__ == "__main__":
     init_db()
     tablas = [r["name"] for r in fetch_all("SELECT name FROM sqlite_master WHERE type='table'")]
     print("Tablas:", tablas)
+

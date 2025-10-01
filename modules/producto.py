@@ -1,3 +1,5 @@
+# Author: Alejandro
+
 import json
 import csv
 
@@ -88,6 +90,11 @@ class Producto:
     @cantidad.setter
     def cantidad(self, valor):        
         self.__cantidad = self.__validar_cantidad(valor)
+        
+    # Nuevo setter para id_producto
+    def _set_id(self, nuevo_id):
+        """Método interno para asignar ID después de insertar en BD"""
+        self.__id_producto = nuevo_id
         
     # Métodos públicos
     def actualizar_stock(self, nueva_cantidad):        
