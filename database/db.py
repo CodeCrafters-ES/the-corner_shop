@@ -64,14 +64,4 @@ if __name__ == "__main__":
     init_db()
     tablas = [r["name"] for r in fetch_all("SELECT name FROM sqlite_master WHERE type='table'")]
     print("Tablas:", tablas)
-    
-    
-    # PRUEBA DE USUARIOS EN DDBB
-    # id = execute("INSERT INTO usuarios(nombre,password,rol) VALUES('administrador','pass123','admin')")
-    # Esteve = execute("INSERT INTO usuarios(nombre,password) VALUES('Esteve','pass123')")
-    # Rossana = execute("INSERT INTO usuarios(nombre,password) VALUES('Rossana','pass123')")
-    # Noemie = execute("INSERT INTO usuarios(nombre,password) VALUES('Noemie','pass123')")
-    # Alejandro = execute("INSERT INTO usuarios(nombre,password) VALUES('Alejandro','pass123')")
-    # clientes=fetch_all("SELECT id, nombre, rol, password FROM usuarios WHERE rol = 'cliente'")
-    # for cliente in clientes:
-    #   print(dict(cliente))
+

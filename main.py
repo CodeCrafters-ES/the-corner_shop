@@ -163,7 +163,7 @@ def main():
                 break
             case _:
                 print("❓ Opción no reconocida. Intenta de nuevo.")
-            
+          
             
 if __name__ == "__main__":
     main()

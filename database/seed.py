@@ -7,6 +7,7 @@ def h(p: str) -> str:
 
 def seed_usuarios(conn):
     usuarios = [
+
         ("Admin",  h("admin"),  "admin"),
         ("Ana",    h("pass123"), "cliente"),
         ("Bruno",  h("pass123"), "cliente"),
@@ -19,6 +20,7 @@ def seed_usuarios(conn):
         ON CONFLICT(nombre) DO UPDATE SET
         password = excluded.password,
         rol      = excluded.rol
+
         """,
         usuarios,
     )
@@ -35,7 +37,6 @@ def seed_productos(conn):
         """
         INSERT INTO productos (nombre, precio, talla, cantidad)
         VALUES (?,?,?,?)
-        ON CONFLICT(nombre) DO UPDATE SET
         precio   = excluded.precio,
         talla    = excluded.talla,
         cantidad = excluded.cantidad
